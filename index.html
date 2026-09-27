@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>d2glaidee ✦ bio</title>
+  <meta name="description" content="Personal bio card for d2glaidee" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="avatar.jpg" />
+
+  <!-- Google Fonts: JetBrains Mono for Player UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    @font-face {
+      font-family: 'Granix-Demo';
+      src: url('Granix-Demo.otf') format('opentype');
+      font-display: swap;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000;
+      font-family: 'Granix-Demo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Ambient Background with Fast Cinematic Fade-in */
+    .bg-layer {
+      position: fixed;
+      inset: -25px;
+      background-image: url('fon.jpg');
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      filter: blur(5px);
+      transform: scale(1.05);
+      z-index: 0;
+      opacity: 0;
+      animation: bgFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .bg-vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(12, 16, 20, 0.3) 0%, rgba(8, 11, 14, 0.75) 60%, rgba(0, 0, 0, 0.95) 100%);
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      animation: vignetteFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes bgFadeIn {
+      0% {
+        opacity: 0;
+        filter: blur(12px);
+        transform: scale(1.08);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(5px);
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes vignetteFadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* 3D Scene Root: Fast 0.1s delay intro */
+    .scene {
+      position: relative;
+      z-index: 2;
+      perspective: 1200px;
+      -webkit-perspective: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: cardIntro 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+    }
+
+    @keyframes cardIntro {
+      0% {
+        opacity: 0;
+        filter: blur(8px);
+        transform: scale(0.94);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0px);
+        transform: scale(1);
+      }
+    }
+
+    /* Outer Tilt Element: Handles 3D Tilt rotation exclusively via JS without transition conflict */
+    .card-tilt {
+      width: 560px;
+      height: 340px;
+      max-width: 92vw;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    /* Glassmorphism Card: Dimensions 560x340, glass styling, shadows and poof pulse */
+    .card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      background: rgba(14, 19, 26, 0.58);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), 0 30px 70px rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+      overflow: hidden;
+      will-change: box-shadow;
+    }
+
+    /* Subtle Glass Glare Highlight */
+    .card-glare {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 100%);
+      opacity: 0.85;
+      mix-blend-mode: overlay;
+      z-index: 5;
+    }
+
+    /* Expanding Ripple Wave Effect */
+    .ripple-wave {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 40%, transparent 75%);
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+      z-index: 6;
+      animation: rippleAnim 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes rippleAnim {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.95;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(2.6);
+        opacity: 0;
+      }
+    }
+
+    /* Elastic "Poof" Compression pulse on click */
+    .card.poof-pulse {
+      animation: poofCompression 0.35s cubic-bezier(0.2, 1, 0.3, 1);
+    }
+
+    @keyframes poofCompression {
+      0% {
+        transform: scale(1);
+      }
+      35% {
+        transform: scale(0.975);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* LAYER 1: Front Layer with [ just click ] */
+    .front-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0px);
+      pointer-events: auto;
+    }
+
+    .front-layer.hidden {
+      opacity: 0;
+      transform: scale(1.05);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .click-prompt {
+      font-size: 21px;
+      letter-spacing: 3px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: lowercase;
+      text-shadow: 0 0 16px rgba(255, 255, 255, 0.3);
+      animation: pulseGlow 2.2s infinite ease-in-out;
+      transition: color 0.25s ease, opacity 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .card:hover .click-prompt {
+      opacity: 1 !important;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.65), 0 0 35px rgba(255, 255, 255, 0.3);
+      transform: scale(1.03);
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        opacity: 0.4;
+      }
+      50% {
+        opacity: 0.85;
+      }
+    }
+
+    /* LAYER 2: Back Profile + Integrated Clean Player Layer */
+    .back-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px 32px;
+      box-sizing: border-box;
+      z-index: 4;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 0;
+      transform: scale(0.96);
+      filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .back-layer.visible {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0px);
+      pointer-events: auto;
+    }
+
+    /* Top Section: Avatar strictly centered with Links */
+    .profile-top {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 4px;
+    }
+
+    /* Left Side: Avatar & Name */
+    .back-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 86px;
+      height: 86px;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+      background-color: #141a20;
+    }
+
+    /* Green status dot fixed precisely on avatar border */
+    .status-dot {
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid #000000;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    .back-name {
+      font-family: 'Granix-Demo', sans-serif;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 1px;
+      margin-top: 10px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+      text-transform: lowercase;
+    }
+
+    /* Right Side: Clean transparent links */
+    .back-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 13px;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 3px 0;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      text-decoration: none;
+      font-family: 'Granix-Demo', sans-serif;
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: 1px;
+      text-transform: lowercase;
+      cursor: pointer;
+      position: relative;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .social-btn:hover {
+      opacity: 0.65;
+      transform: translateX(3px);
+    }
+
+    .social-icon {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .copy-toast {
+      position: absolute;
+      right: -65px;
+      top: 50%;
+      transform: translateY(-50%) scale(0.9);
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(34, 197, 94, 0.25);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      color: #4ade80;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+
+    /* Bottom Section: Clean Integrated Player (NO grey box, pure glass, border-top separator) */
+    .card-player {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 14px;
+      margin-top: auto;
+      cursor: default;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .player-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .track-cover {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background-color: #1a2028;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+      flex-shrink: 0;
+    }
+
+    .track-meta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.25;
+    }
+
+    .track-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.2px;
+    }
+
+    .track-artist {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-block;
+      margin-top: 1px;
+    }
+
+    .track-artist:hover {
+      color: #ffffff;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* Center Section: Play/Pause Button, Current Time, Seek Slider, Duration */
+    .player-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-grow: 1;
+      max-width: 250px;
+    }
+
+    /* Play / Pause Toggle Button */
+    .play-pause-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      opacity: 0.85;
+      flex-shrink: 0;
+      transition: opacity 0.2s ease, transform 0.15s ease;
+    }
+
+    .play-pause-btn:hover {
+      opacity: 1;
+      transform: scale(1.12);
+    }
+
+    .play-pause-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .track-time {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.3px;
+      width: 28px;
+      text-align: center;
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Clean Native Range Slider for Seek without scratchy sounds */
+    .seek-wrapper {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .player-progress-bar {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(to right, #ffffff 0%, #ffffff 0%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.16) 100%);
+      outline: none;
+      cursor: pointer;
+      transition: height 0.15s ease;
+    }
+
+    .player-progress-bar:hover {
+      height: 5px;
+    }
+
+    .player-progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+      transition: transform 0.15s ease;
+    }
+
+    .player-progress-bar:hover::-webkit-slider-thumb {
+      transform: scale(1.2);
+    }
+
+    .player-progress-bar::-moz-range-thumb {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Right Section: Integrated Mini Volume Control */
+    .player-volume {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .player-mute-btn {
+      background: none;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      opacity: 0.75;
+      transition: opacity 0.2s ease;
+    }
+
+    .player-mute-btn:hover {
+      opacity: 1;
+    }
+
+    .player-mute-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .player-volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 50px;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .player-volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+      transition: transform 0.15s ease;
+    }
+
+    .player-volume-slider:hover::-webkit-slider-thumb {
+      transform: scale(1.2);
+    }
+
+    .player-volume-slider::-moz-range-thumb {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: none;
+      cursor: pointer;
+    }
+
+    @media (max-width: 580px) {
+      .card-tilt {
+        height: 320px;
+      }
+      .click-prompt {
+        font-size: 18px;
+        letter-spacing: 2px;
+      }
+      .back-layer {
+        padding: 20px 20px 16px;
+      }
+      .profile-top {
+        gap: 30px;
+      }
+      .avatar-wrapper {
+        width: 72px;
+        height: 72px;
+      }
+      .back-name {
+        font-size: 15px;
+      }
+      .social-btn {
+        font-size: 15px;
+        gap: 10px;
+      }
+      .social-icon {
+        width: 16px;
+        height: 16px;
+      }
+      .card-player {
+        padding-top: 10px;
+        gap: 8px;
+      }
+      .player-center {
+        max-width: 160px;
+      }
+      .player-volume-slider {
+        width: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient Background Layers -->
+  <div class="bg-layer" id="bgLayer"></div>
+  <div class="bg-vignette"></div>
+
+  <!-- Audio Element (Initial volume 0.12) -->
+  <audio id="bgAudio" src="music.mp3" loop preload="auto"></audio>
+
+  <!-- 3D Scene Root -->
+  <div class="scene" id="scene">
+    <!-- Outer Tilt Wrapper: Smooth 3D tilt without CSS transition collision -->
+    <div class="card-tilt" id="cardTilt">
+      <!-- Monolithic Glass Card: Handles dimensions, poof pulse & content switch -->
+      <div class="card" id="card">
+        <div class="card-glare"></div>
+
+        <!-- Layer 1: [ just click ] -->
+        <div class="front-layer" id="frontLayer">
+          <div class="click-prompt">[ just click ]</div>
+        </div>
+
+        <!-- Layer 2: Profile (Avatar, Links & Clean Integrated Player) -->
+        <div class="back-layer" id="backLayer">
+          <!-- Top Section: Avatar + Links strictly centered -->
+          <div class="profile-top">
+            <!-- Left Column: Avatar & Name -->
+            <div class="back-left">
+              <div class="avatar-wrapper">
+                <img src="avatar.jpg" alt="d2glaidee" class="avatar-img" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/identicon/svg?seed=d2glaidee&backgroundColor=141a20';" />
+                <div class="status-dot"></div>
+              </div>
+              <div class="back-name">d2glaidee</div>
+            </div>
+
+            <!-- Right Column: Pure text & icon links on clean glass -->
+            <div class="back-right">
+              <!-- Steam -->
+              <a href="https://steamcommunity.com/id/d2glaidee/" target="_blank" rel="noopener noreferrer" class="social-btn social-link">
+                <img src="steam.svg" alt="Steam" class="social-icon" />
+                <span>steam</span>
+              </a>
+
+              <!-- Discord (copies username d2glaidee) -->
+              <div class="social-btn social-link" id="discordBtn" title="Click to copy Discord tag">
+                <img src="discord.svg" alt="Discord" class="social-icon" />
+                <span>discord</span>
+                <span class="copy-toast" id="copyToast">copied!</span>
+              </div>
+
+              <!-- osu! -->
+              <a href="https://osu.ppy.sh/users/37507619" target="_blank" rel="noopener noreferrer" class="social-btn social-link">
+                <img src="osu.svg" alt="osu!" class="social-icon" />
+                <span>osu!</span>
+              </a>
+
+              <!-- GitHub -->
+              <a href="https://github.com/d2glaidee" target="_blank" rel="noopener noreferrer" class="social-btn social-link">
+                <img src="github.svg" alt="GitHub" class="social-icon" />
+                <span>github</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Bottom Section: Integrated Clean Player directly on glass with border-top separator -->
+          <div class="card-player" id="cardPlayer">
+            <!-- Left: Cover + Title + Spotify Artist Link -->
+            <div class="player-left">
+              <img src="cover.jpg" alt="Автоспорт - стой" class="track-cover" onerror="this.onerror=null; this.src='avatar.jpg';" />
+              <div class="track-meta">
+                <div class="track-title">Стой</div>
+                <a href="https://open.spotify.com/artist/17mNgaLxdoKUkbRNmiFFhE" target="_blank" rel="noopener noreferrer" class="track-artist" id="artistLink">Автоспорт</a>
+              </div>
+            </div>
+
+            <!-- Center: Play/Pause button + Current Time + Scrub Bar + Duration -->
+            <div class="player-center" id="playerCenter">
+              <button class="play-pause-btn" id="playPauseBtn" aria-label="Play/Pause">
+                <!-- Play Icon (shown when paused) -->
+                <svg id="iconPlay" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <!-- Pause Icon (shown when playing) -->
+                <svg id="iconPause" viewBox="0 0 24 24" style="display: none;">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+              </button>
+
+              <span class="track-time" id="currentTime">0:00</span>
+              
+              <div class="seek-wrapper" id="seekWrapper">
+                <input type="range" class="player-progress-bar" id="progressBar" min="0" max="100" step="0.1" value="0" aria-label="Track progress" />
+              </div>
+
+              <span class="track-time" id="durationTime">0:00</span>
+            </div>
+
+            <!-- Right: Integrated Volume Slider -->
+            <div class="player-volume" id="playerVolume">
+              <button class="player-mute-btn" id="playerMuteBtn" aria-label="Toggle mute">
+                <!-- Volume High Icon -->
+                <svg id="iconVolHigh" viewBox="0 0 24 24">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                </svg>
+                <!-- Volume Muted Icon -->
+                <svg id="iconVolMuted" viewBox="0 0 24 24" style="display: none;">
+                  <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                </svg>
+              </button>
+              <input type="range" class="player-volume-slider" id="playerVolSlider" min="0" max="1" step="0.01" value="0.12" aria-label="Volume control" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // 1. Dynamic Tab Title on visibilitychange
+      document.addEventListener('visibilitychange', function () {
+        document.title = document.hidden ? "where are you? ✦" : "d2glaidee ✦ bio";
+      });
+
+      // DOM Elements
+      const cardTilt = document.getElementById('cardTilt');
+      const card = document.getElementById('card');
+      const frontLayer = document.getElementById('frontLayer');
+      const backLayer = document.getElementById('backLayer');
+      const bgAudio = document.getElementById('bgAudio');
+      const discordBtn = document.getElementById('discordBtn');
+      const copyToast = document.getElementById('copyToast');
+      const socialLinks = document.querySelectorAll('.social-link');
+
+      // Player Elements
+      const cardPlayer = document.getElementById('cardPlayer');
+      const artistLink = document.getElementById('artistLink');
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const iconPlay = document.getElementById('iconPlay');
+      const iconPause = document.getElementById('iconPause');
+      const currentTimeEl = document.getElementById('currentTime');
+      const durationTimeEl = document.getElementById('durationTime');
+      const progressBar = document.getElementById('progressBar');
+      const playerMuteBtn = document.getElementById('playerMuteBtn');
+      const playerVolSlider = document.getElementById('playerVolSlider');
+      const iconVolHigh = document.getElementById('iconVolHigh');
+      const iconVolMuted = document.getElementById('iconVolMuted');
+
+      // Initial Audio Volume: 0.12 (12%)
+      const INITIAL_VOLUME = 0.12;
+      bgAudio.volume = INITIAL_VOLUME;
+      playerVolSlider.value = INITIAL_VOLUME;
+      let hasStartedAudio = false;
+      let previousVolume = INITIAL_VOLUME;
+
+      // Web Audio fallback
+      let audioCtx = null;
+      function playFallbackAmbient() {
+        try {
+          if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+          const now = audioCtx.currentTime;
+          const notes = [130.81, 164.81, 196.00, 246.94];
+          notes.forEach((freq) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(0.008 * (parseFloat(playerVolSlider.value) || INITIAL_VOLUME), now);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+          });
+        } catch (e) {
+          console.warn('Audio note:', e);
+        }
+      }
+
+      function ensureAudioPlays() {
+        if (!hasStartedAudio) {
+          hasStartedAudio = true;
+          bgAudio.volume = parseFloat(playerVolSlider.value) || INITIAL_VOLUME;
+          bgAudio.play().catch(function () {
+            playFallbackAmbient();
+          });
+        }
+      }
+
+      // 3D Tilt Physics State (Continuous, never blocked by transitions)
+      let targetRotX = 0;
+      let targetRotY = 0;
+      let currentRotX = 0;
+      let currentRotY = 0;
+
+      window.addEventListener('mousemove', function (e) {
+        const rect = cardTilt.getBoundingClientRect();
+        const cardCenterX = rect.left + rect.width / 2;
+        const cardCenterY = rect.top + rect.height / 2;
+
+        const deltaX = (e.clientX - cardCenterX) / (window.innerWidth / 2);
+        const deltaY = (e.clientY - cardCenterY) / (window.innerHeight / 2);
+
+        const clampedX = Math.max(-1, Math.min(1, deltaX));
+        const clampedY = Math.max(-1, Math.min(1, deltaY));
+
+        targetRotY = clampedX * 12;
+        targetRotX = -clampedY * 12;
+      });
+
+      window.addEventListener('mouseleave', function () {
+        targetRotX = 0;
+        targetRotY = 0;
+      });
+
+      function animate() {
+        const lerpFactor = 0.085;
+        currentRotX += (targetRotX - currentRotX) * lerpFactor;
+        currentRotY += (targetRotY - currentRotY) * lerpFactor;
+
+        // Pure tilt rotation without transition conflicts
+        cardTilt.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
+
+        // Dynamic glass shadow offsets
+        const shadowX = (-currentRotY * 1.6).toFixed(1);
+        const shadowY = (currentRotX * 1.6 + 28).toFixed(1);
+        card.style.boxShadow = `inset 0 1px 1px rgba(255, 255, 255, 0.22), ${shadowX}px ${shadowY}px 70px rgba(0, 0, 0, 0.7)`;
+
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+
+      // Layer Transition State
+      let isProfileShown = false;
+      let isTransitioning = false;
+
+      // Ripple Wave + Poof Content Switch
+      card.addEventListener('click', function (e) {
+        // Prevent toggle if clicking links, player controls or during transitions
+        if (e.target.closest('.social-link') ||
+            e.target.closest('.card-player') ||
+            isTransitioning) {
+          return;
+        }
+
+        ensureAudioPlays();
+        isTransitioning = true;
+
+        const rect = card.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        // 1. Spawn Ripple Wave at exact click point
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple-wave';
+        const diameter = Math.max(rect.width, rect.height) * 1.5;
+        ripple.style.width = diameter + 'px';
+        ripple.style.height = diameter + 'px';
+        ripple.style.left = clickX + 'px';
+        ripple.style.top = clickY + 'px';
+        card.appendChild(ripple);
+
+        setTimeout(() => {
+          if (ripple.parentNode) {
+            ripple.parentNode.removeChild(ripple);
+          }
+        }, 700);
+
+        // 2. Trigger "poof" elastic pulse on card
+        card.classList.remove('poof-pulse');
+        void card.offsetWidth; // trigger reflow
+        card.classList.add('poof-pulse');
+
+        // 3. Switch between layers with fluid easing
+        isProfileShown = !isProfileShown;
+
+        if (isProfileShown) {
+          frontLayer.classList.add('hidden');
+          backLayer.classList.add('visible');
+        } else {
+          backLayer.classList.remove('visible');
+          frontLayer.classList.remove('hidden');
+        }
+
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 360);
+      });
+
+      // Prevent social links from toggling the card
+      socialLinks.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.stopPropagation();
+          ensureAudioPlays();
+        });
+      });
+
+      // Prevent player actions from toggling the card
+      cardPlayer.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      artistLink.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      // Format time helper (m:ss)
+      function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+      }
+
+      // Audio Time Update & Play/Pause State Sync
+      bgAudio.addEventListener('loadedmetadata', function () {
+        durationTimeEl.textContent = formatTime(bgAudio.duration);
+      });
+
+      bgAudio.addEventListener('play', function () {
+        iconPlay.style.display = 'none';
+        iconPause.style.display = 'block';
+      });
+
+      bgAudio.addEventListener('pause', function () {
+        iconPlay.style.display = 'block';
+        iconPause.style.display = 'none';
+      });
+
+      playPauseBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (bgAudio.paused) {
+          hasStartedAudio = true;
+          bgAudio.play().catch(function () {
+            playFallbackAmbient();
+          });
+        } else {
+          bgAudio.pause();
+        }
+      });
+
+      // Progress bar styling helper
+      function updateProgressBarVisual(percent) {
+        progressBar.style.background = `linear-gradient(to right, #ffffff 0%, #ffffff ${percent}%, rgba(255, 255, 255, 0.16) ${percent}%, rgba(255, 255, 255, 0.16) 100%)`;
+      }
+
+      // Clean Seeking logic (NO scratchy / stutter sound!)
+      let isSeeking = false;
+
+      progressBar.addEventListener('input', function (e) {
+        e.stopPropagation();
+        isSeeking = true;
+        const percent = parseFloat(this.value);
+        updateProgressBarVisual(percent);
+        if (bgAudio.duration) {
+          const targetTime = (percent / 100) * bgAudio.duration;
+          currentTimeEl.textContent = formatTime(targetTime);
+        }
+      });
+
+      progressBar.addEventListener('change', function (e) {
+        e.stopPropagation();
+        if (bgAudio.duration) {
+          const percent = parseFloat(this.value);
+          bgAudio.currentTime = (percent / 100) * bgAudio.duration;
+        }
+        isSeeking = false;
+        ensureAudioPlays();
+      });
+
+      bgAudio.addEventListener('timeupdate', function () {
+        // If user is actively dragging the slider, do not overwrite value!
+        if (isSeeking) return;
+
+        const cur = bgAudio.currentTime || 0;
+        const dur = bgAudio.duration || 0;
+        currentTimeEl.textContent = formatTime(cur);
+
+        if (dur > 0) {
+          durationTimeEl.textContent = formatTime(dur);
+          const percent = (cur / dur) * 100;
+          progressBar.value = percent;
+          updateProgressBarVisual(percent);
+        }
+      });
+
+      // Integrated Volume Slider Control
+      playerVolSlider.addEventListener('input', function (e) {
+        e.stopPropagation();
+        const val = parseFloat(this.value);
+        bgAudio.volume = val;
+        updateMuteState(val === 0);
+        if (val > 0) {
+          previousVolume = val;
+        }
+      });
+
+      playerMuteBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (bgAudio.volume > 0) {
+          previousVolume = bgAudio.volume;
+          bgAudio.volume = 0;
+          playerVolSlider.value = 0;
+          updateMuteState(true);
+        } else {
+          const restoreVol = previousVolume > 0 ? previousVolume : INITIAL_VOLUME;
+          bgAudio.volume = restoreVol;
+          playerVolSlider.value = restoreVol;
+          updateMuteState(false);
+          ensureAudioPlays();
+        }
+      });
+
+      function updateMuteState(isMuted) {
+        if (isMuted) {
+          iconVolHigh.style.display = 'none';
+          iconVolMuted.style.display = 'block';
+        } else {
+          iconVolHigh.style.display = 'block';
+          iconVolMuted.style.display = 'none';
+        }
+      }
+
+      // Discord Copy Username Functionality
+      if (discordBtn) {
+        discordBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          ensureAudioPlays();
+          const username = 'd2glaidee';
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(username).then(showToast).catch(fallbackCopy);
+          } else {
+            fallbackCopy();
+          }
+
+          function fallbackCopy() {
+            const temp = document.createElement('textarea');
+            temp.value = username;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+              document.execCommand('copy');
+              showToast();
+            } catch (err) {
+              console.warn('Copy failed:', err);
+            }
+            document.body.removeChild(temp);
+          }
+
+          function showToast() {
+            if (copyToast) {
+              copyToast.classList.add('show');
+              setTimeout(function () {
+                copyToast.classList.remove('show');
+              }, 1800);
+            }
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
